@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCharacterById, getCharacters } from "@/services/rickandmorty";
-import { character } from "@/types/character";
+import { Character } from "@/types/character";
 
 type characterPageProps = {
   params: Promise<{ id: string }>;
@@ -109,7 +109,7 @@ export async function generateMetadata({ params }: characterPageProps): Promise<
   }
 }
 
-function InfoPanel({ character }: Readonly<{ character: character }>) {
+function InfoPanel({ character }: Readonly<{ character: Character }>) {
   return (
     <section className="border border-green-500/20 bg-black p-5">
       <p className="text-xs font-bold uppercase tracking-[0.2em] text-green-500">Informações</p>
@@ -146,7 +146,7 @@ function InfoPanel({ character }: Readonly<{ character: character }>) {
 export default async function CharacterDetailPage({ params }: Readonly<characterPageProps>) {
   const { id } = await params;
 
-  let character: character | null;
+  let character: Character | null;
 
   try {
     character = await getCharacterById(id);

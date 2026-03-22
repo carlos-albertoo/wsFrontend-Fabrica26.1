@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import rickImage from './imgs/rick.png';
 
 export const metadata = {
   title: "Rick and Morty Multiverso",
@@ -32,12 +31,13 @@ export default function Home() {
         <h1 className="mb-6 text-5xl font-black uppercase leading-tight tracking-tight text-green-500 drop-shadow-lg sm:text-7xl">
           Bem-vindo ao Multiverso 
         </h1>
-        <Image
-        src={rickImage}
-        alt="Rick and Morty"
-        width={700}
-        height={700}
-        className="animate-glow transition-all duration-500 hover:scale-110"
+
+       <Image
+  src="/imgs/rick.png" 
+  alt="Rick and Morty"
+  width={700}
+  height={700}
+  className="animate-glow transition-all duration-500 hover:scale-110"
 />
 
         <p className="mb-10 max-w-2xl text-lg text-white/90 sm:text-xl">

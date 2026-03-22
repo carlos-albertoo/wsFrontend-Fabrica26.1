@@ -44,10 +44,12 @@ O projeto foi construído utilizando as ferramentas mais modernas do ecossistema
 A arquitetura do projeto foi organizada visando escalabilidade e separação de responsabilidades:
 
 ```text
+public
+|---imgs/                   # Imagens estáticas
 src/
 ├── app/                  # Rotas da aplicação (App Router do Next.js)
 │   ├── detalhes/[id]/    # Página dinâmica de detalhes do personagem
-│   ├── imgs/             # Imagens estáticas
+│   |            # Imagens estáticas
 │   ├── globals.css       # Estilos globais e configurações do Tailwind
 │   ├── layout.tsx        # Layout principal da aplicação
 │   └── page.tsx          # Página Home
