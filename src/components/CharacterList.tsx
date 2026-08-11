@@ -121,7 +121,7 @@ export default function CharacterList({ characters }: Readonly<CharacterListProp
               setStatusSelecionado(event.target.value);
               resetarPagina();
             }}
-            className="h-11 rounded-lg border border-green-500/20 bg-gray-800 px-3 text-sm text-white outline-none transition-colors focus:border-green-500"
+            className="cursor-pointer h-11 rounded-lg border border-green-500/20 bg-gray-800 px-3 text-sm text-white outline-none transition-colors focus:border-green-500"
           >
             <option value="TODOS">Todos os status</option>
             {statuses.map((status) => (
@@ -177,7 +177,7 @@ export default function CharacterList({ characters }: Readonly<CharacterListProp
               type="button"
               onClick={() => setPaginaAtual((pagina) => Math.max(1, pagina - 1))}
               disabled={paginaSegura === 1}
-              className="h-10 min-w-28 rounded border border-green-500/30 bg-gray-900 px-4 text-xs font-bold uppercase tracking-[0.15em] text-white transition-colors hover:border-green-500 disabled:cursor-not-allowed disabled:opacity-40"
+              className="cursor-pointer h-10 min-w-28 rounded border border-green-500/30 bg-gray-900 px-4 text-xs font-bold uppercase tracking-[0.15em] text-white transition-colors hover:border-green-500 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Anterior
             </button>
@@ -189,7 +189,7 @@ export default function CharacterList({ characters }: Readonly<CharacterListProp
                   type="button"
                   onClick={() => irParaPagina(numeroPagina)}
                   className={[
-                    "h-10 min-w-10 rounded border px-3 text-sm font-bold transition-colors",
+                    "cursor-pointer h-10 min-w-10 rounded border px-3 text-sm font-bold transition-colors",
                     numeroPagina === paginaSegura
                       ? "border-green-500 bg-green-500 text-black"
                       : "border-green-500/30 bg-gray-900 text-white hover:border-green-500",
@@ -204,7 +204,7 @@ export default function CharacterList({ characters }: Readonly<CharacterListProp
               type="button"
               onClick={() => setPaginaAtual((pagina) => Math.min(totalPaginas, pagina + 1))}
               disabled={paginaSegura === totalPaginas}
-              className="h-10 min-w-28 rounded border border-green-500/30 bg-gray-900 px-4 text-xs font-bold uppercase tracking-[0.15em] text-white transition-colors hover:border-green-500 disabled:cursor-not-allowed disabled:opacity-40"
+              className=" cursor-pointer h-10 min-w-28 rounded border border-green-500/30 bg-gray-900 px-4 text-xs font-bold uppercase tracking-[0.15em] text-white transition-colors hover:border-green-500 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Próxima
             </button>
