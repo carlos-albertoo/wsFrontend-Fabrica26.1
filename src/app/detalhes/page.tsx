@@ -46,7 +46,7 @@ export default async function CharactersPage() {
   return (
     <div className="flex-1 bg-gradient-to-b from-black to-gray-900">
       <section className="mx-auto w-full max-w-6xl px-4 pb-8 pt-12 sm:px-6 lg:px-8">
-        <div className="border border-green-500/20 bg-black/80 p-8 backdrop-blur-sm sm:p-10">
+        <div className="rounded-lg border border-green-500/20 bg-black/80 p-8 backdrop-blur-sm sm:p-10">
           <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.3em] text-green-500">Personagens</p>
           <h1 className="text-4xl font-black uppercase leading-[1.05] text-white sm:text-6xl">Todos os Personagens</h1>
           <p className="mt-4 max-w-3xl text-sm leading-7 text-white/85 sm:text-base">

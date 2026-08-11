@@ -12,9 +12,12 @@ type CharacterListProps = {
 };
 
 export default function CharacterList({ characters }: Readonly<CharacterListProps>) {
+  const ITENS_POR_PAGINA = 12;
+
   const [busca, setBusca] = useState("");
   const [statusSelecionado, setStatusSelecionado] = useState("TODOS");
   const [somenteFavoritos, setSomenteFavoritos] = useState(false);
+  const [paginaAtual, setPaginaAtual] = useState(1);
   const [idsFavoritos, setIdsFavoritos] = useState<number[]>(() => {
     if (!("window" in globalThis)) {
       return [];
@@ -53,6 +56,34 @@ export default function CharacterList({ characters }: Readonly<CharacterListProp
     });
   }, [characters, idsFavoritos, somenteFavoritos, busca, statusSelecionado]);
 
+  const totalPaginas = useMemo(() => {
+    return Math.max(1, Math.ceil(charactersFiltrados.length / ITENS_POR_PAGINA));
+  }, [charactersFiltrados.length]);
+
+  const paginaSegura = Math.min(Math.max(1, paginaAtual), totalPaginas);
+
+  const paginasVisiveis = useMemo(() => {
+    if (totalPaginas <= 5) {
+      return Array.from({ length: totalPaginas }, (_, index) => index + 1);
+    }
+
+    const inicio = Math.min(Math.max(1, paginaSegura - 2), totalPaginas - 4);
+    return Array.from({ length: 5 }, (_, index) => inicio + index);
+  }, [paginaSegura, totalPaginas]);
+
+  const personagensDaPagina = useMemo(() => {
+    const indiceInicial = (paginaSegura - 1) * ITENS_POR_PAGINA;
+    return charactersFiltrados.slice(indiceInicial, indiceInicial + ITENS_POR_PAGINA);
+  }, [charactersFiltrados, paginaSegura]);
+
+  function resetarPagina() {
+    setPaginaAtual(1);
+  }
+
+  function irParaPagina(numeroPagina: number) {
+    setPaginaAtual(Math.min(Math.max(1, numeroPagina), totalPaginas));
+  }
+
   function alternarFavorito(characterId: number) {
     setIdsFavoritos((atuais) => {
       if (atuais.includes(characterId)) {
@@ -61,28 +92,36 @@ export default function CharacterList({ characters }: Readonly<CharacterListProp
 
       return [...atuais, characterId];
     });
+
+    resetarPagina();
   }
 
   return (
     <section className="mx-auto w-full max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
-      <div className="mb-8 grid gap-4 border border-green-500/20 bg-black p-4 sm:grid-cols-[2fr_1fr_auto]">
-        <label className="flex flex-col gap-2 text-xs font-bold uppercase tracking-[0.15em] text-white/85">
+      <div className="rounded-lg mb-8 grid gap-4 border border-green-500/20 bg-black p-4 sm:grid-cols-[2fr_1fr_auto]">
+        <label className="flex flex-col gap-2 rounded-xl text-xs font-bold uppercase tracking-[0.15em] text-white/85">
           <span>Buscar personagem</span>
           <input
             type="text"
             value={busca}
-            onChange={(event) => setBusca(event.target.value)}
+            onChange={(event) => {
+              setBusca(event.target.value);
+              resetarPagina();
+            }}
             placeholder="Digite um nome"
-            className="h-11 border border-green-500/20 bg-gray-800 px-3 text-sm text-white outline-none transition-colors focus:border-green-500"
+            className="h-11 rounded-lg border border-green-500/20 bg-gray-800 px-3 text-sm text-white outline-none transition-colors focus:border-green-500"
           />
         </label>
 
-        <label className="flex flex-col gap-2 text-xs font-bold uppercase tracking-[0.15em] text-white/85">
+        <label className="flex flex-col gap-2 rounded-xl text-xs font-bold uppercase tracking-[0.15em] text-white/85">
           <span>Filtrar por status</span>
           <select
             value={statusSelecionado}
-            onChange={(event) => setStatusSelecionado(event.target.value)}
-            className="h-11 border border-green-500/20 bg-gray-800 px-3 text-sm text-white outline-none transition-colors focus:border-green-500"
+            onChange={(event) => {
+              setStatusSelecionado(event.target.value);
+              resetarPagina();
+            }}
+            className="h-11 rounded-lg border border-green-500/20 bg-gray-800 px-3 text-sm text-white outline-none transition-colors focus:border-green-500"
           >
             <option value="TODOS">Todos os status</option>
             {statuses.map((status) => (
@@ -93,13 +132,16 @@ export default function CharacterList({ characters }: Readonly<CharacterListProp
           </select>
         </label>
 
-        <div className="flex h-full flex-col gap-2 border border-green-500/20 bg-gray-800 px-4 py-2 text-xs font-bold uppercase tracking-[0.15em] text-white/85">
+        <div className="flex h-full flex-col gap-2 rounded-xl border border-green-500/20 bg-gray-800 px-4 py-2 text-xs font-bold uppercase tracking-[0.15em] text-white/85">
           <span>Favoritos</span>
           <label className="flex flex-1 items-center justify-between gap-3 text-xs font-normal normal-case tracking-normal text-white">
             <span className="select-none leading-5">Somente favoritos</span>
             <Switch
               checked={somenteFavoritos}
-              onCheckedChange={setSomenteFavoritos}
+              onCheckedChange={(value) => {
+                setSomenteFavoritos(value);
+                resetarPagina();
+              }}
               aria-label="Ativar filtro de favoritos"
             />
           </label>
@@ -118,16 +160,56 @@ export default function CharacterList({ characters }: Readonly<CharacterListProp
           <p className="mt-2 text-sm text-white/75">Ajuste a busca, o status ou o filtro de favoritos.</p>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {charactersFiltrados.map((character) => (
-            <CharacterCard
-              key={character.id}
-              character={character}
-              favorito={idsFavoritos.includes(character.id)}
-              aoAlternarFavorito={alternarFavorito}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {personagensDaPagina.map((character) => (
+              <CharacterCard
+                key={character.id}
+                character={character}
+                favorito={idsFavoritos.includes(character.id)}
+                aoAlternarFavorito={alternarFavorito}
+              />
+            ))}
+          </div>
+
+          <div className="rounded-lg mt-8 flex flex-col items-center justify-between gap-3 border border-green-500/20 bg-black px-4 py-3 text-sm text-white/80 sm:flex-row">
+            <button
+              type="button"
+              onClick={() => setPaginaAtual((pagina) => Math.max(1, pagina - 1))}
+              disabled={paginaSegura === 1}
+              className="h-10 min-w-28 rounded border border-green-500/30 bg-gray-900 px-4 text-xs font-bold uppercase tracking-[0.15em] text-white transition-colors hover:border-green-500 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Anterior
+            </button>
+
+            <div className="flex items-center gap-2">
+              {paginasVisiveis.map((numeroPagina) => (
+                <button
+                  key={numeroPagina}
+                  type="button"
+                  onClick={() => irParaPagina(numeroPagina)}
+                  className={[
+                    "h-10 min-w-10 rounded border px-3 text-sm font-bold transition-colors",
+                    numeroPagina === paginaSegura
+                      ? "border-green-500 bg-green-500 text-black"
+                      : "border-green-500/30 bg-gray-900 text-white hover:border-green-500",
+                  ].join(" ")}
+                >
+                  {numeroPagina}
+                </button>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setPaginaAtual((pagina) => Math.min(totalPaginas, pagina + 1))}
+              disabled={paginaSegura === totalPaginas}
+              className="h-10 min-w-28 rounded border border-green-500/30 bg-gray-900 px-4 text-xs font-bold uppercase tracking-[0.15em] text-white transition-colors hover:border-green-500 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Próxima
+            </button>
+          </div>
+        </>
       )}
     </section>
   );

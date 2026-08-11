@@ -53,21 +53,42 @@ function mapApiCharacterToCharacter(apiCharacter: ApiCharacter): Character {
 
 async function fetchCharactersFromApi(): Promise<ApiCharacter[]> {
   try {
-    const response = await fetch(RICK_AND_MORTY_API_BASE_URL, {
+    const firstResponse = await fetch(RICK_AND_MORTY_API_BASE_URL, {
       next: { revalidate: 60 },
     });
 
-    if (!response.ok) {
-      throw new Error(`Rick and Morty API request failed with status ${response.status}`);
+    if (!firstResponse.ok) {
+      throw new Error(`Rick and Morty API request failed with status ${firstResponse.status}`);
     }
 
-    const payload = (await response.json()) as ApiResponse;
+    const firstPayload = (await firstResponse.json()) as ApiResponse;
 
-    if (!Array.isArray(payload.results)) {
+    if (!Array.isArray(firstPayload.results)) {
       throw new TypeError("A API do Rick and Morty retornou um formato inesperado.");
     }
 
-    return payload.results;
+    const totalPages = firstPayload.info?.pages ?? 1;
+    const allCharacters = [...firstPayload.results];
+
+    for (let page = 2; page <= totalPages; page += 1) {
+      const response = await fetch(`${RICK_AND_MORTY_API_BASE_URL}?page=${page}`, {
+        next: { revalidate: 60 },
+      });
+
+      if (!response.ok) {
+        break;
+      }
+
+      const payload = (await response.json()) as ApiResponse;
+
+      if (!Array.isArray(payload.results)) {
+        break;
+      }
+
+      allCharacters.push(...payload.results);
+    }
+
+    return allCharacters;
   } catch (error) {
     console.error("Failed to fetch characters from Rick and Morty API:", error);
     throw new Error("Nao foi possivel carregar os personagens do Rick and Morty no momento.");

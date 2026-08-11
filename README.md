@@ -1,91 +1,87 @@
 # 🌌 Rick and Morty | Desafio Workshop Front-End
 
-Este projeto foi desenvolvido como parte do **Desafio Workshop Front-End**. Trata-se de uma aplicação web interativa que permite aos usuários explorar o universo da animação *Rick and Morty*, visualizando personagens, buscando por nomes, filtrando por status e salvando seus favoritos.
+Aplicação web desenvolvida para explorar personagens da série Rick and Morty, com busca, filtros, favoritos e paginação.
 
 Desenvolvido por: **Carlos Alberto**
 
-## 🎨 Design e Interface (UI/UX)
+## ✅ Atualizações e implementações realizadas
 
-A aplicação apresenta um design moderno e imersivo, focado na temática da série:
-* **Paleta de Cores:** O layout utiliza um tema escuro (Dark Mode) sofisticado, com fundos em tons profundos de azul-escuro/preto. O grande destaque visual fica por conta dos detalhes em **verde neon** (referência aos portais da série), aplicados nos botões principais, tipografia de destaque (como partes do logo) e linhas de separação.
-* **Estilo Visual:** Interface limpa com cards de personagens bem definidos. Efeitos de *glow* (brilho) no logo principal dão um toque especial à página inicial.
-* **Responsividade:** A aplicação é totalmente responsiva, contando com a adição de um **menu estilo hambúrguer** para garantir a melhor experiência em dispositivos móveis.
+### 1. Carregamento completo da API
+- A busca de personagens foi ajustada para consumir todos os dados da API do Rick and Morty, não apenas a primeira página.
+- Isso permite listar uma quantidade muito maior de personagens sem perder registros importantes.
 
-## 📡 API Integrada
+### 2. Paginação funcional
+- Foi implementada paginação com **12 personagens por página**.
+- A navegação passou a incluir **botões numéricos de página**.
+- A janela de páginas acompanha a navegação e exibe até **5 números por vez**, mantendo a interface organizada.
 
-Os dados exibidos na aplicação não são estáticos; eles são consumidos dinamicamente em tempo real a partir da API REST oficial do Rick and Morty.
+### 3. Sistema de busca e filtros
+- Busca por nome em tempo real.
+- Filtro por status do personagem.
+- Filtro para mostrar apenas favoritos.
+- Quando qualquer filtro é alterado, a paginação volta para a primeira página para manter a experiência consistente.
 
-* **Endpoint Base Utilizado:** `https://rickandmortyapi.com/api/character`
-* A lógica de requisição (fetch) foi isolada na pasta de serviços (`src/services/rickandmorty.ts`), mantendo o código organizado e facilitando a manutenção das chamadas assíncronas.
+### 4. Sistema de favoritos
+- Cada card possui botão para salvar ou remover personagem dos favoritos.
+- Os favoritos são armazenados no localStorage do navegador.
+- O toggle de favoritos deixa a listagem mais dinâmica e personalizada.
 
-## ✨ Funcionalidades
+### 5. Melhorias visuais e UX
+- Cards com visual mais moderno e refinado.
+- Bordas arredondadas nos campos de busca e filtros.
+- Destaque visual para a imagem do personagem, deixando o card mais harmonioso.
+- Ajustes de espaçamento, contraste e hover para uma interface mais elegante.
 
-* **Página Inicial (Home):** Apresentação do projeto com links rápidos para os episódios e lista de personagens.
-* **Exploração de Personagens:** Grid dinâmico populado diretamente com os dados da API externa.
-* **Sistema de Busca e Filtros:** * Busca em tempo real digitando o nome do personagem.
-  * Filtro por status do personagem (ex: Vivo, Morto, Desconhecido).
-* **Sistema de Favoritos:** * Botão de "Salvar" individual em cada card de personagem.
-  * Switch (Toggle) interativo para exibir "Somente favoritos".
-* **Detalhes do Personagem:** Roteamento dinâmico para visualização detalhada de um personagem específico.
+### 6. Página de detalhes
+- Foi criada a página individual de personagem com informações detalhadas.
+- A navegação para cada item é feita dinamicamente pelo ID do personagem.
 
-## 🚀 Tecnologias Utilizadas
+## 🎨 Tecnologias utilizadas
 
-O projeto foi construído utilizando as ferramentas mais modernas do ecossistema React:
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Radix UI
+- API pública do Rick and Morty
 
-* **[Next.js](https://nextjs.org/) (v16.2.1):** Framework React utilizando a nova arquitetura *App Router*.
-* **[React](https://react.dev/) (v19.2.4):** Biblioteca para construção da interface de usuário.
-* **[TypeScript](https://www.typescriptlang.org/):** Tipagem estática para garantir um código mais seguro, tipando o retorno da API.
-* **[Tailwind CSS](https://tailwindcss.com/) (v4):** Estilização utilitária para construção rápida e responsiva do layout.
-* **Radix UI (`@radix-ui/react-switch`):** Componente acessível para o botão de toggle dos favoritos.
-* **Utilitários de CSS:** `clsx` e `tailwind-merge` para manipulação dinâmica de classes condissionais.
+## ✨ Funcionalidades principais
 
-## 📂 Estrutura do Projeto
+- Listagem de personagens
+- Busca por nome
+- Filtro por status
+- Favoritos persistentes
+- Paginação com navegação por número de página
+- Página de detalhes do personagem
+- Layout responsivo
 
-A arquitetura do projeto foi organizada visando escalabilidade e separação de responsabilidades:
+## 🚀 Como rodar o projeto localmente
 
-```text
-public
-|---imgs/                   # Imagens estáticas
-src/
-├── app/                  # Rotas da aplicação (App Router do Next.js)
-│   ├── detalhes/[id]/    # Página dinâmica de detalhes do personagem
-│   |            # Imagens estáticas
-│   ├── globals.css       # Estilos globais e configurações do Tailwind
-│   ├── layout.tsx        # Layout principal da aplicação
-│   └── page.tsx          # Página Home
-├── components/           # Componentes reutilizáveis
-│   ├── ui/               # Componentes genéricos de UI (botões, inputs)
-│   ├── CharacterCard.tsx # Card individual de personagem
-│   ├── CharacterList.tsx # Grid de listagem
-│   ├── Footer.tsx        # Rodapé da aplicação
-│   └── Navbar.tsx        # Cabeçalho e navegação (inclui menu mobile)
-├── lib/                  # Funções utilitárias (ex: utils.tsx)
-├── services/             # Integração com APIs externas
-│   └── rickandmorty.ts   # Funções de requisição para a API do Rick & Morty
-└── types/                # Definições de tipos do TypeScript
-    └── character.ts      # Interfaces e tipagem de retorno da API
-⚙️ Como executar o projeto localmente
-Siga os passos abaixo para rodar a aplicação na sua máquina:
+1. Clone o repositório:
+   ```bash
+   git clone <url-do-repositorio>
+   ```
 
-1- Passo
-Clone este repositório:
-git clone <url-do-seu-repositorio>
+2. Entre na pasta do projeto:
+   ```bash
+   cd wsFrontend-Fabrica26.1
+   ```
 
-2- Passo
-Acesse a pasta do projeto: 
-cd wsFrontend-Fabrica26.1
+3. Instale as dependências:
+   ```bash
+   npm install
+   ```
 
-3- Passo
-Instale as dependências:
-npm install
-# ou
-yarn install
+4. Inicie o servidor:
+   ```bash
+   npm run dev
+   ```
 
-4- Passo
-Inicie o servidor de desenvolvimento:
-npm run dev
-# ou
-yarn dev
+5. Abra no navegador:
+   ```bash
+   http://localhost:3000
+   ```
 
-5- Passo
-Abra o navegador e acesse http://localhost:3000
+## 📌 Observações
+
+Este projeto continua em evolução, com foco em melhorar a experiência visual e a organização da interface para uma navegação mais fluida e profissional.
